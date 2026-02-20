@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global BIM Platform - Live Preview</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <header class="topbar">
+    <div class="logo-wrap">
+      <div class="logo-mark">GB</div>
+      <div>
+        <div class="logo">Global BIM Enterprise</div>
+        <small>Elegant Ops Console</small>
+      </div>
+    </div>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#projects">Projects</a>
+      <a href="#documents">Documents</a>
+      <a href="#auth">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="dashboard" class="panel gradient-rose">
+      <div class="title-row">
+        <h1>Executive Dashboard</h1>
+        <span class="chip">Live Portfolio Health</span>
+      </div>
+      <div class="kpis">
+        <article><h3>Active Projects</h3><p>148</p></article>
+        <article><h3>Open RFIs</h3><p>1,296</p></article>
+        <article><h3>Issued Drawings</h3><p>42,810</p></article>
+        <article><h3>Vendor Contracts</h3><p>$918M</p></article>
+      </div>
+      <div class="chart">
+        <div class="bar" style="--v:62"></div>
+        <div class="bar" style="--v:78"></div>
+        <div class="bar" style="--v:56"></div>
+        <div class="bar" style="--v:91"></div>
+        <div class="bar" style="--v:73"></div>
+        <div class="bar" style="--v:88"></div>
+      </div>
+    </section>
+
+    <section id="projects" class="panel gradient-royal">
+      <div class="title-row">
+        <h1>Project Portfolio</h1>
+        <span class="chip">Global Branches</span>
+      </div>
+      <table>
+        <thead><tr><th>Project</th><th>Region</th><th>Status</th><th>Budget</th></tr></thead>
+        <tbody>
+          <tr><td>NEOM Mobility Hub</td><td>MEA</td><td><span class="ok">On Track</span></td><td>$1.2B</td></tr>
+          <tr><td>Trans-Asia Rail BIM</td><td>APAC</td><td><span class="warn">At Risk</span></td><td>$860M</td></tr>
+          <tr><td>London MEP Upgrade</td><td>EU</td><td><span class="ok">On Track</span></td><td>$240M</td></tr>
+          <tr><td>Houston HVAC Retrofit</td><td>NA</td><td><span class="delay">Delayed</span></td><td>$180M</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="documents" class="panel gradient-emerald">
+      <div class="title-row">
+        <h1>Document Control</h1>
+        <span class="chip">Revision Stream</span>
+      </div>
+      <div class="doc-grid">
+        <article><h4>AR-STR-LEV03-R07.rvt</h4><p>Revit Model • Rev 07</p></article>
+        <article><h4>MEP-HVAC-ZN11-R12.nwd</h4><p>Navisworks • Rev 12</p></article>
+        <article><h4>CIV-UTIL-CORR-22.dwg</h4><p>AutoCAD • Rev 22</p></article>
+        <article><h4>ISO-COORD-APR-2026.pdf</h4><p>Coordination Sheet • Approved</p></article>
+      </div>
+    </section>
+
+    <section id="auth" class="panel gradient-gold auth">
+      <div class="title-row">
+        <h1>Enterprise Sign-In</h1>
+        <span class="chip">Secure Access</span>
+      </div>
+      <form>
+        <label>Email<input type="email" value="admin@globalbim.com" /></label>
+        <label>Password<input type="password" value="********" /></label>
+        <button type="button">Sign In</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
