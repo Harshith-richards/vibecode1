@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/progress.dart';
 import '../models/week.dart';
 import '../utils/roadmap_data.dart';
-import 'firebase_service.dart';
 
 class ProgressService extends ChangeNotifier {
   static const _prefsKey = 'task_progress_map';
@@ -14,9 +13,7 @@ class ProgressService extends ChangeNotifier {
   static const _reminderHourKey = 'reminder_hour';
   static const _reminderMinuteKey = 'reminder_minute';
 
-  final FirebaseService firebaseService;
-
-  ProgressService({required this.firebaseService}) {
+  ProgressService() {
     weeks = buildRoadmapData();
   }
 
@@ -27,7 +24,6 @@ class ProgressService extends ChangeNotifier {
 
   Future<void> initialize() async {
     await _loadLocalProgress();
-    await syncFromCloud();
     notifyListeners();
   }
 
@@ -75,29 +71,12 @@ class ProgressService extends ChangeNotifier {
           if (task.id == taskId) {
             task.completed = value;
             await _saveLocalProgress();
-            await firebaseService.syncTaskProgress(taskId: taskId, completed: value);
             notifyListeners();
             return;
           }
         }
       }
     }
-  }
-
-  Future<void> syncFromCloud() async {
-    final cloud = await firebaseService.downloadTaskProgress();
-    if (cloud.isEmpty) return;
-
-    for (final week in weeks) {
-      for (final day in week.days) {
-        for (final task in day.tasks) {
-          if (cloud.containsKey(task.id)) {
-            task.completed = cloud[task.id]!;
-          }
-        }
-      }
-    }
-    await _saveLocalProgress();
   }
 
   Future<void> updateReminder(int hour, int minute) async {

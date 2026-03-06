@@ -1,59 +1,35 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/analytics_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
 import 'screens/roadmap_screen.dart';
 import 'screens/settings_screen.dart';
-import 'services/firebase_service.dart';
 import 'services/notification_service.dart';
 import 'services/progress_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var firebaseEnabled = true;
-  try {
-    await Firebase.initializeApp();
-  } catch (_) {
-    firebaseEnabled = false;
-  }
-
-  final firebaseService = FirebaseService();
   final notificationService = NotificationService();
   await notificationService.init();
 
-  final progressService = ProgressService(firebaseService: firebaseService);
+  final progressService = ProgressService();
   await progressService.initialize();
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: progressService),
-      ],
-      child: RoadmapApp(
-        firebaseService: firebaseService,
-        notificationService: notificationService,
-        firebaseEnabled: firebaseEnabled,
-      ),
+    ChangeNotifierProvider.value(
+      value: progressService,
+      child: RoadmapApp(notificationService: notificationService),
     ),
   );
 }
 
 class RoadmapApp extends StatelessWidget {
-  const RoadmapApp({
-    super.key,
-    required this.firebaseService,
-    required this.notificationService,
-    required this.firebaseEnabled,
-  });
+  const RoadmapApp({super.key, required this.notificationService});
 
-  final FirebaseService firebaseService;
   final NotificationService notificationService;
-  final bool firebaseEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -69,35 +45,14 @@ class RoadmapApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFF0A0E1A),
       ),
-      home: firebaseEnabled
-          ? StreamBuilder(
-              stream: firebaseService.authStateChanges(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return LoginScreen(firebaseService: firebaseService);
-                }
-                return MainShell(
-                  firebaseService: firebaseService,
-                  notificationService: notificationService,
-                );
-              },
-            )
-          : MainShell(
-              firebaseService: firebaseService,
-              notificationService: notificationService,
-            ),
+      home: MainShell(notificationService: notificationService),
     );
   }
 }
 
 class MainShell extends StatefulWidget {
-  const MainShell({
-    super.key,
-    required this.firebaseService,
-    required this.notificationService,
-  });
+  const MainShell({super.key, required this.notificationService});
 
-  final FirebaseService firebaseService;
   final NotificationService notificationService;
 
   @override
@@ -119,13 +74,7 @@ class _MainShellState extends State<MainShell> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('.NET Learning Tracker'),
-        actions: [
-          IconButton(
-            onPressed: widget.firebaseService.signOut,
-            icon: const Icon(Icons.logout),
-          ),
-        ],
+        title: const Text('.NET Learning Tracker (Local Mode)'),
       ),
       body: screens[index],
       bottomNavigationBar: NavigationBar(

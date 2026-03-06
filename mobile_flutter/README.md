@@ -1,80 +1,53 @@
-# .NET Roadmap Tracker (Flutter) — Windows Setup & Run Guide
+# .NET Roadmap Tracker (Flutter) — Local-Only Setup for Windows + Antigravity IDE
 
-This guide explains **every step** to run this Flutter app on your Windows laptop.
+This project now runs in **100% local mode**:
+- ✅ No Firebase
+- ✅ No cloud database
+- ✅ No login required
+- ✅ Progress saved locally on your device using `shared_preferences`
 
----
-
-## 1) What this app is
-
-A Flutter mobile app to track a 10-week .NET learning roadmap with:
-- Week/day/task tracking
-- Progress dashboard + analytics charts
-- Calendar view
-- Daily reminder settings
-- Optional Google login + Firebase sync
-
-Project path:
-- `mobile_flutter/`
+If you were blocked at Firebase setup, you can now skip it completely.
 
 ---
 
-## 2) Prerequisites on Windows
+## 1) What you need on Windows
 
-Install these tools first.
+Install these tools first:
 
-### A. Install Git
-1. Download Git for Windows: https://git-scm.com/download/win
-2. Install with default options.
-3. Verify:
-   ```powershell
-   git --version
-   ```
+1. **Git**
+   - Download: https://git-scm.com/download/win
+   - Verify:
+     ```powershell
+     git --version
+     ```
 
-### B. Install Flutter SDK
-1. Download Flutter SDK (stable): https://docs.flutter.dev/get-started/install/windows/mobile
-2. Extract to a simple path, for example:
-   - `C:\src\flutter`
-3. Add Flutter to PATH:
-   - Open **Start** → search **Environment Variables**
-   - Edit user/system `Path`
-   - Add: `C:\src\flutter\bin`
-4. Open new PowerShell and verify:
-   ```powershell
-   flutter --version
-   ```
+2. **Flutter SDK (Stable)**
+   - Install guide: https://docs.flutter.dev/get-started/install/windows/mobile
+   - Extract to: `C:\src\flutter`
+   - Add to PATH: `C:\src\flutter\bin`
+   - Verify:
+     ```powershell
+     flutter --version
+     ```
 
-### C. Install Android Studio (for emulator + Android SDK)
-1. Download: https://developer.android.com/studio
-2. During install, keep these selected:
-   - Android SDK
-   - Android SDK Platform
-   - Android Virtual Device
-3. Open Android Studio once and complete first-run setup.
+3. **Android Studio** (for Android SDK + emulator)
+   - Download: https://developer.android.com/studio
+   - Install with Android SDK + AVD
 
-### D. Install VS Code (optional but recommended)
-1. Download: https://code.visualstudio.com/
-2. Install extensions:
-   - Flutter
-   - Dart
+4. **Antigravity IDE**
+   - Open this repo folder from Antigravity IDE.
+   - Use the integrated terminal for commands below.
 
 ---
 
-## 3) Verify Flutter setup
+## 2) Verify your setup
 
 Run:
 ```powershell
 flutter doctor
 ```
 
-Fix anything marked with `✗`.
-
-Expected key checks:
-- Flutter (stable)
-- Android toolchain
-- Android Studio
-- Connected device or emulator
-
-If licenses are pending:
+If Android licenses are pending:
 ```powershell
 flutter doctor --android-licenses
 ```
@@ -82,53 +55,52 @@ Accept all.
 
 ---
 
-## 4) Clone/Open the project
+## 3) Open project in Antigravity IDE
 
-If not already cloned:
+In terminal:
 ```powershell
-git clone <YOUR_REPO_URL>
-cd vibecode1\mobile_flutter
+cd <path-to-repo>\vibecode1\mobile_flutter
 ```
 
-If already cloned:
-```powershell
-cd <path-to-your-repo>\vibecode1\mobile_flutter
-```
+You should see:
+- `pubspec.yaml`
+- `lib/`
 
 ---
 
-## 5) Install project dependencies
+## 4) Install packages
 
-Inside `mobile_flutter` run:
 ```powershell
 flutter pub get
 ```
 
-This downloads all packages from `pubspec.yaml`.
+This installs all dependencies for local mode.
 
 ---
 
-## 6) Run app without Firebase (quick start)
+## 5) Start emulator (or connect phone)
 
-This project can start even if Firebase is not configured.
+### Option A: Android Emulator
+- Open Android Studio → Device Manager
+- Start a virtual device
 
-### A. Start Android Emulator
-Option 1 (Android Studio):
-- Open Android Studio → **Device Manager**
-- Create/start an emulator (Pixel + recent Android version)
-
-Option 2 (CLI):
-```powershell
-flutter emulators
-flutter emulators --launch <emulator_id>
-```
-
-### B. Check connected device
+Then confirm:
 ```powershell
 flutter devices
 ```
 
-### C. Run app
+### Option B: Physical Android phone
+- Enable Developer options + USB debugging
+- Connect via USB
+- Run:
+  ```powershell
+  flutter devices
+  ```
+
+---
+
+## 6) Run the app (local-only)
+
 ```powershell
 flutter run
 ```
@@ -138,85 +110,33 @@ If multiple devices appear:
 flutter run -d <device_id>
 ```
 
----
-
-## 7) Configure Firebase (optional, for Google login + cloud sync)
-
-If you want login + Firestore sync, do this section.
-
-## 7.1 Create Firebase project
-1. Go to https://console.firebase.google.com/
-2. Create a new project.
-
-## 7.2 Enable Authentication
-1. Firebase Console → **Authentication** → **Get started**
-2. Enable **Google** provider.
-
-## 7.3 Create Firestore database
-1. Firebase Console → **Firestore Database**
-2. Create database (start in test mode for development).
-
-## 7.4 Register Android app in Firebase
-1. Add Android app with package name from Flutter Android project.
-   - Typical package is in `android/app/src/main/AndroidManifest.xml` and `android/app/build.gradle`.
-2. Download `google-services.json`.
-3. Place it at:
-   - `mobile_flutter/android/app/google-services.json`
-
-## 7.5 Register iOS app (only if building on macOS later)
-- Not needed for Windows Android testing.
-
-## 7.6 Use FlutterFire CLI to generate config
-Install FlutterFire CLI:
-```powershell
-dart pub global activate flutterfire_cli
-```
-
-Make sure Dart global bin is in PATH (if required):
-- `%USERPROFILE%\AppData\Local\Pub\Cache\bin`
-
-Then run inside `mobile_flutter`:
-```powershell
-flutterfire configure
-```
-This generates:
-- `lib/firebase_options.dart`
-
-### 7.7 Wire `firebase_options.dart` in `main.dart`
-Current app uses guarded `Firebase.initializeApp()`.
-For full configured setup, update `main.dart` to initialize with options:
-```dart
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-```
-and import:
-```dart
-import 'firebase_options.dart';
-```
-
-(Without this, app can still run in fallback mode.)
+That’s it — app will run fully offline/local.
 
 ---
 
-## 8) Notifications on Android
+## 7) How local storage works
 
-The app uses `flutter_local_notifications`.
-
-Notes:
-- Android 13+ may require notification runtime permission.
-- If reminders don’t appear, open app notification settings and allow notifications.
-
-To test quickly:
-1. Open app → Settings tab
-2. Set reminder time 1–2 minutes ahead
-3. Keep app/background and wait for notification
+- Task completion state is saved on-device using `shared_preferences`.
+- Reminder time is also saved locally.
+- When you close and reopen the app, progress remains.
+- If you uninstall app/clear app data, local progress resets.
 
 ---
 
-## 9) Common commands you will use
+## 8) Features available in local-only mode
 
-From `mobile_flutter` folder:
+- Home dashboard with progress
+- Roadmap with expandable week/day/task lists
+- Checkbox task tracking
+- Analytics charts
+- Calendar screen
+- Reminder time setting (local notifications)
+
+No internet/database is needed for these core features.
+
+---
+
+## 9) Useful commands (inside `mobile_flutter`)
 
 ```powershell
 flutter pub get
@@ -224,11 +144,10 @@ flutter analyze
 flutter test
 flutter devices
 flutter run
-flutter run -d <device_id>
 flutter clean
 ```
 
-If build artifacts become inconsistent:
+If build has issues:
 ```powershell
 flutter clean
 flutter pub get
@@ -237,47 +156,43 @@ flutter run
 
 ---
 
-## 10) Troubleshooting (Windows)
+## 10) Common issues and fixes
 
-### Problem: `flutter` not recognized
-- Recheck PATH includes `C:\src\flutter\bin`
-- Close/reopen terminal
+### `flutter` command not found
+- Re-check PATH includes: `C:\src\flutter\bin`
+- Restart terminal/IDE
 
-### Problem: No devices found
+### No device found
 - Start emulator from Android Studio Device Manager
-- Or connect physical Android with USB debugging enabled
-- Then run `flutter devices`
+- Or reconnect phone with USB debugging
+- Check again: `flutter devices`
 
-### Problem: Gradle/JDK errors
-- Android Studio usually installs required JDK
-- Check with:
-  ```powershell
-  flutter doctor -v
-  ```
-
-### Problem: Firebase login not working
-- Confirm Google Sign-In enabled in Firebase Auth
-- Ensure SHA-1/SHA-256 fingerprints are added for Android app
-- Re-download `google-services.json` after config changes
-
-### Problem: Chart/calendar packages fail to fetch
-- Run:
-  ```powershell
-  flutter pub cache repair
-  flutter pub get
-  ```
-
-### Problem: App stuck on build
-Try:
+### Gradle/JDK error
+Run:
 ```powershell
-flutter clean
-flutter pub get
-flutter run -v
+flutter doctor -v
 ```
+Android Studio usually auto-installs required JDK.
+
+### Notifications not showing
+- Allow notifications in Android app settings
+- On Android 13+, runtime notification permission may be required
 
 ---
 
-## 11) Project structure reference
+## 11) Quick first-run checklist
+
+1. `flutter doctor`
+2. `cd <repo>\vibecode1\mobile_flutter`
+3. `flutter pub get`
+4. Start emulator
+5. `flutter run`
+6. Open Roadmap tab and mark tasks
+7. Restart app and verify saved progress
+
+---
+
+## 12) Project structure
 
 ```text
 mobile_flutter/
@@ -293,25 +208,4 @@ mobile_flutter/
 
 ---
 
-## 12) Recommended first run flow
-
-1. `flutter doctor`
-2. Start emulator
-3. `cd mobile_flutter`
-4. `flutter pub get`
-5. `flutter run`
-6. Open Roadmap tab and toggle tasks
-7. Close/reopen app to verify local progress persistence
-8. (Optional) configure Firebase and test Google login + sync
-
----
-
-## 13) Need help quickly?
-
-If any command fails, share these outputs:
-- `flutter doctor -v`
-- `flutter --version`
-- `flutter devices`
-- full error log from `flutter run -v`
-
-With these 4 logs, most issues can be fixed fast.
+If you want, I can also give you a **super short 2-minute run guide** (copy-paste commands only) for Antigravity IDE.
